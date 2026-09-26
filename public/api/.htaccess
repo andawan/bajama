@@ -1,0 +1,7 @@
+Options -Indexes
+RewriteEngine On
+
+# Route only versioned API paths through the JSON front controller.
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^v1/?(.*)$ v1/index.php?path=$1 [QSA,L]

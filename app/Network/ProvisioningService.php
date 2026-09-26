@@ -1,0 +1,356 @@
+<?php
+declare(strict_types=1);
+
+namespace BAJAMA\Network;
+
+use PDO;
+use RuntimeException;
+
+final class ProvisioningService
+{
+    private const SERVICE_TYPES = [
+        'PPPOE',
+        'HOTSPOT',
+        'STATIC',
+        'FTTH',
+    ];
+
+    private const PROVISIONING_PENDING = 'PENDING';
+    private const PROVISIONING_SYNCED  = 'SYNCED';
+    private const PROVISIONING_ERROR   = 'ERROR';
+
+    public static function marker(int $subscriptionId): string
+    {
+        return 'BAJAMA-SUB-' . $subscriptionId;
+    }
+
+    public static function encryptPassword(string $password): string
+    {
+        return MikroTik::encryptPassword($password);
+    }
+
+    public static function decryptPassword(string $payload): string
+    {
+        return MikroTik::decryptPassword($payload);
+    }
+
+    public static function findSubscription(
+        PDO $db,
+        int $organizationId,
+        int $subscriptionId
+    ): ?array {
+        $stmt = $db->prepare(
+            'SELECT
+                s.*,
+                c.customer_code,
+                c.name AS customer_name,
+                c.status AS customer_status,
+                sp.name AS plan_name,
+                sp.code AS plan_code,
+                sp.service_type AS plan_service_type
+             FROM subscriptions s
+             INNER JOIN customers c
+                 ON c.id = s.customer_id
+                AND c.organization_id = s.organization_id
+             LEFT JOIN service_plans sp
+                 ON sp.id = s.service_plan_id
+                AND sp.organization_id = s.organization_id
+             WHERE s.id = ?
+               AND s.organization_id = ?
+             LIMIT 1'
+        );
+
+        $stmt->execute([
+            $subscriptionId,
+            $organizationId,
+        ]);
+
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $row ?: null;
+    }
+
+    public static function findRouter(
+        PDO $db,
+        int $organizationId,
+        int $routerId
+    ): ?array {
+        return MikroTik::find(
+            $db,
+            $organizationId,
+            $routerId
+        );
+    }
+
+    public static function findProvisioned(
+        PDO $db,
+        int $organizationId,
+        int $subscriptionId
+    ): ?array {
+        $stmt = $db->prepare(
+            'SELECT *
+             FROM provisioned_services
+             WHERE organization_id = ?
+               AND subscription_id = ?
+             LIMIT 1'
+        );
+
+        $stmt->execute([
+            $organizationId,
+            $subscriptionId,
+        ]);
+
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $row ?: null;
+    }
+
+    public static function validateServiceType(
+        string $serviceType
+    ): void {
+        if (!in_array(
+            $serviceType,
+            self::SERVICE_TYPES,
+            true
+        )) {
+            throw new RuntimeException(
+                'Jenis layanan tidak valid.'
+            );
+        }
+    }
+
+    public static function validateSubscription(
+        array $subscription
+    ): void {
+        if (empty($subscription['id'])) {
+            throw new RuntimeException(
+                'Subscription tidak valid.'
+            );
+        }
+
+        $serviceType = strtoupper(
+            trim(
+                (string)($subscription['service_type'] ?? '')
+            )
+        );
+
+        self::validateServiceType($serviceType);
+
+        if (empty($subscription['customer_id'])) {
+            throw new RuntimeException(
+                'Customer subscription tidak ditemukan.'
+            );
+        }
+    }
+
+    public static function validateRouter(
+        array $router
+    ): void {
+        if (empty($router['id'])) {
+            throw new RuntimeException(
+                'Router MikroTik tidak valid.'
+            );
+        }
+
+        if (empty($router['host'])) {
+            throw new RuntimeException(
+                'Host MikroTik kosong.'
+            );
+        }
+
+        if (empty($router['username'])) {
+            throw new RuntimeException(
+                'Username MikroTik kosong.'
+            );
+        }
+
+        if (
+            !isset($router['password_encrypted']) ||
+            trim((string)$router['password_encrypted']) === ''
+        ) {
+            throw new RuntimeException(
+                'Password MikroTik belum tersedia.'
+            );
+        }
+    }
+
+    public static function prepare(
+        PDO $db,
+        int $organizationId,
+        int $subscriptionId,
+        int $routerId,
+        string $username,
+        ?string $password,
+        ?string $profile = null
+    ): array {
+        $subscription = self::findSubscription(
+            $db,
+            $organizationId,
+            $subscriptionId
+        );
+
+        if (!$subscription) {
+            throw new RuntimeException(
+                'Subscription tidak ditemukan.'
+            );
+        }
+
+        self::validateSubscription($subscription);
+
+        $router = self::findRouter(
+            $db,
+            $organizationId,
+            $routerId
+        );
+
+        if (!$router) {
+            throw new RuntimeException(
+                'Router MikroTik tidak ditemukan.'
+            );
+        }
+
+        self::validateRouter($router);
+
+        $username = trim($username);
+
+        if ($username === '') {
+            throw new RuntimeException(
+                'Username layanan tidak boleh kosong.'
+            );
+        }
+
+        $serviceType = strtoupper(
+            trim(
+                (string)$subscription['service_type']
+            )
+        );
+
+        $encryptedPassword = null;
+
+        if ($password !== null) {
+            if ($password === '') {
+                throw new RuntimeException(
+                    'Password layanan tidak boleh kosong.'
+                );
+            }
+
+            $encryptedPassword =
+                self::encryptPassword($password);
+        }
+
+        return [
+            'organization_id' => $organizationId,
+            'subscription_id' => $subscriptionId,
+            'router_id' => $routerId,
+            'service_type' => $serviceType,
+            'username' => $username,
+            'password_encrypted' => $encryptedPassword,
+            'profile' => $profile !== null
+                ? trim($profile)
+                : null,
+            'routeros_comment' =>
+                self::marker($subscriptionId),
+            'subscription' => $subscription,
+            'router' => $router,
+        ];
+    }
+
+    public static function connect(
+        PDO $db,
+        int $organizationId,
+        int $routerId
+    ): RouterOSApi {
+        $router = self::findRouter(
+            $db,
+            $organizationId,
+            $routerId
+        );
+
+        if (!$router) {
+            throw new RuntimeException(
+                'Router MikroTik tidak ditemukan.'
+            );
+        }
+
+        self::validateRouter($router);
+
+        return MikroTik::connect($router);
+    }
+
+    public static function findRouterRecordByMarker(
+        RouterOSApi $api,
+        string $serviceType,
+        string $marker
+    ): ?array {
+        $serviceType = strtoupper(
+            trim($serviceType)
+        );
+
+        self::validateServiceType($serviceType);
+
+        if ($serviceType === 'PPPOE') {
+            $rows = $api->pppoeSecrets();
+        } elseif ($serviceType === 'HOTSPOT') {
+            $rows = $api->hotspotUsers();
+        } else {
+            $rows = [];
+        }
+
+        foreach ($rows as $row) {
+            if (
+                isset($row['comment']) &&
+                (string)$row['comment'] === $marker
+            ) {
+                return $row;
+            }
+        }
+
+        return null;
+    }
+
+    public static function setProvisioningError(
+        PDO $db,
+        int $organizationId,
+        int $subscriptionId,
+        string $message
+    ): void {
+        $stmt = $db->prepare(
+            'UPDATE provisioned_services
+             SET provisioning_status = ?,
+                 last_error = ?
+             WHERE organization_id = ?
+               AND subscription_id = ?'
+        );
+
+        $stmt->execute([
+            self::PROVISIONING_ERROR,
+            mb_substr($message, 0, 2000),
+            $organizationId,
+            $subscriptionId,
+        ]);
+    }
+
+    public static function markSynced(
+        PDO $db,
+        int $organizationId,
+        int $subscriptionId,
+        string $routerOsId
+    ): void {
+        $stmt = $db->prepare(
+            'UPDATE provisioned_services
+             SET provisioning_status = ?,
+                 last_synced_at = NOW(),
+                 last_error = NULL,
+                 routeros_id = ?
+             WHERE organization_id = ?
+               AND subscription_id = ?'
+        );
+
+        $stmt->execute([
+            self::PROVISIONING_SYNCED,
+            $routerOsId,
+            $organizationId,
+            $subscriptionId,
+        ]);
+    }
+}

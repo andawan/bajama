@@ -1,0 +1,14 @@
+<footer class="bajama-footer">
+
+    <div>
+        <strong>BAJAMA</strong>
+        <span class="footer-muted">
+            — Building Networks Together
+        </span>
+    </div>
+
+    <div class="footer-muted">
+        ISP Business & Network Operations Platform
+    </div>
+
+</footer>

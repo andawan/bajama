@@ -1,0 +1,99 @@
+<header class="topbar">
+
+    <div class="topbar-left">
+
+        <button
+            class="mobile-menu-btn"
+            type="button"
+            id="sidebarToggle">
+
+            <i class="bi bi-list"></i>
+
+        </button>
+
+        <div>
+            <div class="topbar-title">
+                <?= htmlspecialchars($pageTitle ?? 'Dashboard') ?>
+            </div>
+
+            <div class="topbar-subtitle">
+                BAJAMA ISP Business & Network Operations Platform
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="topbar-right">
+
+        <div class="system-indicator">
+            <span class="status-dot"></span>
+            <span>Online</span>
+        </div>
+
+
+        <div class="dropdown bajama-account-dropdown">
+
+            <button
+                class="user-button user-icon-button"
+                type="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+                aria-label="BAJAMA Account"
+                title="BAJAMA Account">
+                <i class="bi bi-person-circle"></i>
+            </button>
+
+            <ul class="dropdown-menu dropdown-menu-end shadow bajama-account-menu">
+
+                <li>
+                    <div class="dropdown-account-header">
+
+                        <div class="dropdown-account-icon">
+                            <i class="bi bi-person-circle"></i>
+                        </div>
+
+                        <div class="dropdown-account-info">
+                            <span class="account-login-label">Login as :</span>
+                            <strong><?= htmlspecialchars($displayRole) ?></strong>
+                        </div>
+
+                    </div>
+                </li>
+
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+
+                <li>
+                    <a class="dropdown-item" href="#">
+                        <i class="bi bi-person"></i>
+                        <span>Profile</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a class="dropdown-item" href="#">
+                        <i class="bi bi-gear"></i>
+                        <span>Settings</span>
+                    </a>
+                </li>
+
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+
+                <li>
+                    <a class="dropdown-item text-danger" href="logout.php">
+                        <i class="bi bi-box-arrow-right"></i>
+                        <span>Logout</span>
+                    </a>
+                </li>
+
+            </ul>
+
+        </div>
+
+    </div>
+
+</header>

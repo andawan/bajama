@@ -1,0 +1,1284 @@
+:root {
+    --bajama-primary: #2563eb;
+    --bajama-primary-dark: #1d4ed8;
+    --bajama-sidebar: #0f172a;
+    --bajama-sidebar-2: #111c31;
+    --bajama-bg: #f4f7fb;
+    --bajama-card: #ffffff;
+    --bajama-text: #172033;
+    --bajama-muted: #718096;
+    --bajama-border: #e5eaf1;
+    --bajama-success: #16a34a;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: var(--bajama-bg);
+    color: var(--bajama-text);
+    font-family:
+        Inter,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+}
+
+a {
+    text-decoration: none;
+}
+
+.bajama-wrapper {
+    min-height: 100vh;
+}
+
+
+/* SIDEBAR */
+
+.bajama-sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+
+    width: 270px;
+
+    background:
+        linear-gradient(
+            180deg,
+            var(--bajama-sidebar),
+            var(--bajama-sidebar-2)
+        );
+
+    color: #fff;
+
+    z-index: 1000;
+
+    display: flex;
+    flex-direction: column;
+
+    box-shadow: 8px 0 30px rgba(15, 23, 42, .08);
+}
+
+.brand-area {
+    height: 86px;
+
+    padding: 20px;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    border-bottom: 1px solid rgba(255,255,255,.08);
+}
+
+.brand-mark {
+    width: 44px;
+    height: 44px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 13px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #06b6d4
+        );
+
+    font-size: 21px;
+
+    box-shadow:
+        0 8px 22px rgba(37,99,235,.30);
+}
+
+.brand-name {
+    font-size: 21px;
+    font-weight: 800;
+    letter-spacing: .5px;
+}
+
+.brand-subtitle {
+    color: #94a3b8;
+    font-size: 9px;
+    margin-top: 1px;
+    letter-spacing: .25px;
+}
+
+.sidebar-menu {
+    padding: 17px 12px;
+    flex: 1;
+    overflow-y: auto;
+}
+
+.menu-label {
+    padding: 13px 12px 7px;
+
+    color: #64748b;
+
+    font-size: 10px;
+    font-weight: 800;
+
+    letter-spacing: 1.2px;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    min-height: 45px;
+
+    margin: 3px 0;
+    padding: 0 12px;
+
+    border-radius: 10px;
+
+    color: #cbd5e1 !important;
+    text-decoration: none !important;
+
+    font-size: 14px;
+    font-weight: 500;
+
+    transition: .18s ease;
+}
+
+.menu-item span {
+    color: inherit !important;
+    text-decoration: none !important;
+}
+
+.menu-item i {
+    width: 20px;
+    text-align: center;
+    font-size: 16px;
+    color: inherit !important;
+}
+
+.menu-item:hover {
+    color: #fff !important;
+    background: rgba(255,255,255,.07);
+}
+
+.menu-item.active {
+    color: #fff !important;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(37,99,235,.95),
+            rgba(37,99,235,.65)
+        );
+
+    box-shadow:
+        0 8px 18px rgba(37,99,235,.18);
+}
+
+.menu-soon {
+    margin-left: auto;
+
+    padding: 2px 6px;
+
+    border-radius: 5px;
+
+    color: #94a3b8;
+
+    background: rgba(255,255,255,.06);
+
+    font-size: 8px;
+    text-transform: uppercase;
+}
+
+.sidebar-bottom {
+    padding: 14px;
+
+    border-top: 1px solid rgba(255,255,255,.08);
+}
+
+.network-status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    padding: 11px;
+
+    margin-bottom: 9px;
+
+    background: rgba(255,255,255,.045);
+
+    border-radius: 10px;
+}
+
+.network-status strong {
+    display: block;
+    font-size: 12px;
+}
+
+.network-status small {
+    display: block;
+    color: #94a3b8;
+    font-size: 10px;
+    margin-top: 2px;
+}
+
+.status-dot {
+    display: inline-block;
+
+    width: 8px;
+    height: 8px;
+
+    border-radius: 50%;
+
+    background: #22c55e;
+
+    box-shadow:
+        0 0 0 4px rgba(34,197,94,.10);
+}
+
+.logout-item {
+    height: 40px;
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    padding: 0 12px;
+
+    color: #fca5a5;
+
+    border-radius: 9px;
+
+    font-size: 13px;
+}
+
+.logout-item:hover {
+    color: #fff;
+    background: rgba(239,68,68,.12);
+}
+
+
+/* MAIN */
+
+.main-content {
+    min-height: 100vh;
+    margin-left: 270px;
+}
+
+.topbar {
+    height: 86px;
+
+    padding: 0 30px;
+
+    background: #fff;
+
+    border-bottom: 1px solid var(--bajama-border);
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    position: sticky;
+    top: 0;
+    z-index: 900;
+}
+
+.topbar-left,
+.topbar-right {
+    display: flex;
+    align-items: center;
+}
+
+.topbar-left {
+    gap: 15px;
+}
+
+.topbar-right {
+    gap: 20px;
+}
+
+/* Keeps the shared header stable on legacy network pages whose local
+ * templates still define a generic .topbar rule. */
+.bajama-topbar {
+    height: 86px !important;
+    min-height: 86px !important;
+    padding: 0 30px !important;
+    background: #fff !important;
+    border-bottom: 1px solid var(--bajama-border) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 270px !important;
+    right: 0 !important;
+    z-index: 900 !important;
+}
+
+/* Fixed header is outside document flow; keep page content below it. */
+.main-content > .bajama-topbar + .content-area {
+    padding-top: 106px;
+}
+
+/* RouterOS/MikroTik legacy pages use a dedicated topbar. Keep it visible
+ * while the resource table or command panel is scrolled. */
+.mk-topbar {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 950 !important;
+}
+
+.bajama-router-management-page .bajama-router-header {
+    position: sticky;
+    top: 86px;
+    z-index: 850;
+    background: rgba(255, 255, 255, .96);
+    backdrop-filter: blur(10px);
+}
+
+.topbar-title {
+    font-size: 20px;
+    font-weight: 750;
+}
+
+.topbar-subtitle {
+    color: var(--bajama-muted);
+    font-size: 11px;
+    margin-top: 2px;
+}
+
+.mobile-menu-btn {
+    display: none;
+
+    border: 0;
+    background: transparent;
+
+    font-size: 25px;
+}
+
+.system-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    color: #64748b;
+
+    font-size: 12px;
+}
+
+.user-button {
+    border: 0;
+    background: transparent;
+
+    display: flex;
+    align-items: center;
+    gap: 9px;
+
+    padding: 4px 0;
+}
+
+.user-button::after {
+    margin-left: 2px;
+}
+
+.user-avatar {
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 11px;
+
+    color: #fff;
+
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #06b6d4
+        );
+
+    font-weight: 700;
+}
+
+.user-info {
+    text-align: left;
+}
+
+.user-info strong {
+    display: block;
+    font-size: 12px;
+}
+
+.user-info small {
+    display: block;
+    color: #64748b;
+    font-size: 10px;
+}
+
+.bajama-user-menu .dropdown-menu {
+    min-width: 238px;
+}
+
+.bajama-role-language-item {
+    padding: 0.35rem 1rem 0.6rem;
+}
+
+.bajama-role-language-label {
+    color: #475569;
+    font-size: 0.78rem;
+    font-weight: 600;
+    margin-bottom: 0.35rem;
+}
+
+.bajama-role-language-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+}
+
+.bajama-role-language-list .badge {
+    color: #475569;
+    cursor: pointer;
+    font-size: 0.68rem;
+    font-weight: 500;
+}
+
+.bajama-role-language-list .badge.active,
+.bajama-role-language-list .badge:hover {
+    background: #2563eb !important;
+    color: #fff !important;
+}
+
+.bajama-i18n-fallback {
+    bottom: 12px;
+    position: fixed;
+    right: 14px;
+    z-index: 1040;
+}
+
+
+/* CONTENT */
+
+.content-area {
+    padding: 30px;
+    min-height: calc(100vh - 150px);
+}
+
+
+/* FOOTER */
+
+.bajama-footer {
+    padding: 20px 30px;
+
+    border-top: 1px solid var(--bajama-border);
+
+    background: #fff;
+
+    display: flex;
+    justify-content: space-between;
+
+    font-size: 11px;
+}
+
+.footer-muted {
+    color: #94a3b8;
+}
+
+
+/* DASHBOARD */
+
+.dashboard-welcome {
+    margin-bottom: 25px;
+}
+
+.dashboard-welcome h2 {
+    margin: 0;
+
+    font-size: 25px;
+    font-weight: 800;
+}
+
+.dashboard-welcome p {
+    margin: 5px 0 0;
+
+    color: var(--bajama-muted);
+    font-size: 13px;
+}
+
+.stat-card {
+    height: 100%;
+
+    background: #fff;
+
+    border: 1px solid var(--bajama-border);
+
+    border-radius: 15px;
+
+    padding: 20px;
+
+    transition: .2s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 12px 35px rgba(15,23,42,.07);
+}
+
+.stat-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+.stat-icon {
+    width: 45px;
+    height: 45px;
+
+    border-radius: 12px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 19px;
+
+    background: #eff6ff;
+    color: var(--bajama-primary);
+}
+
+.stat-title {
+    color: #64748b;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .4px;
+}
+
+.stat-value {
+    margin-top: 7px;
+
+    font-size: 27px;
+    line-height: 1;
+
+    font-weight: 800;
+}
+
+.stat-footer {
+    margin-top: 15px;
+
+    color: #94a3b8;
+
+    font-size: 10px;
+}
+
+.dashboard-card {
+    height: 100%;
+
+    background: #fff;
+
+    border: 1px solid var(--bajama-border);
+
+    border-radius: 15px;
+
+    overflow: hidden;
+}
+
+.dashboard-card-header {
+    padding: 17px 20px;
+
+    border-bottom: 1px solid var(--bajama-border);
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.dashboard-card-header h5 {
+    margin: 0;
+
+    font-size: 14px;
+    font-weight: 750;
+}
+
+.dashboard-card-header small {
+    color: #94a3b8;
+}
+
+.dashboard-card-body {
+    padding: 20px;
+}
+
+.quick-action {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 13px;
+
+    margin-bottom: 9px;
+
+    color: var(--bajama-text);
+
+    border: 1px solid var(--bajama-border);
+
+    border-radius: 10px;
+
+    transition: .15s ease;
+}
+
+.quick-action:hover {
+    border-color: #bfdbfe;
+    background: #eff6ff;
+}
+
+.quick-action-icon {
+    width: 37px;
+    height: 37px;
+
+    border-radius: 9px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #eff6ff;
+    color: var(--bajama-primary);
+}
+
+.quick-action strong {
+    display: block;
+    font-size: 12px;
+}
+
+.quick-action small {
+    color: #94a3b8;
+    font-size: 10px;
+}
+
+.license-box {
+    padding: 20px;
+
+    border-radius: 13px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #eff6ff,
+            #ecfeff
+        );
+
+    border: 1px solid #dbeafe;
+}
+
+.license-label {
+    color: #64748b;
+
+    font-size: 10px;
+    font-weight: 700;
+
+    text-transform: uppercase;
+}
+
+.license-plan {
+    margin-top: 3px;
+
+    font-size: 22px;
+    font-weight: 800;
+
+    color: #1e40af;
+}
+
+.license-description {
+    margin-top: 3px;
+
+    color: #64748b;
+
+    font-size: 11px;
+}
+
+.progress {
+    height: 7px;
+}
+
+.empty-state {
+    padding: 30px 10px;
+
+    text-align: center;
+
+    color: #94a3b8;
+}
+
+.empty-state i {
+    font-size: 30px;
+    display: block;
+    margin-bottom: 9px;
+}
+
+.empty-state strong {
+    display: block;
+    color: #64748b;
+    font-size: 13px;
+}
+
+.empty-state span {
+    display: block;
+    margin-top: 4px;
+    font-size: 11px;
+}
+
+
+/* MOBILE */
+
+.sidebar-overlay {
+    display: none;
+}
+
+@media (max-width: 991px) {
+
+    .bajama-sidebar {
+        transform: translateX(-100%);
+        transition: .25s ease;
+    }
+
+    .bajama-sidebar.show {
+        transform: translateX(0);
+    }
+
+    .main-content {
+        margin-left: 0;
+    }
+
+    .mobile-menu-btn {
+        display: block;
+    }
+
+    .sidebar-overlay {
+        position: fixed;
+        inset: 0;
+
+        background: rgba(15,23,42,.45);
+
+        z-index: 950;
+    }
+
+    .sidebar-overlay.show {
+        display: block;
+    }
+
+    .content-area {
+        padding: 20px;
+    }
+
+    .topbar {
+        padding: 0 20px;
+    }
+
+    .bajama-topbar {
+        left: 0 !important;
+    }
+
+    .main-content > .bajama-topbar + .content-area {
+        padding-top: 106px;
+    }
+
+    .system-indicator {
+        display: none;
+    }
+
+    .bajama-footer {
+        padding: 18px 20px;
+        flex-direction: column;
+        gap: 5px;
+    }
+}
+
+@media (max-width: 575px) {
+
+    .user-info {
+        display: none;
+    }
+
+    .topbar-subtitle {
+        display: none;
+    }
+
+    .dashboard-welcome h2 {
+        font-size: 21px;
+    }
+
+    .content-area {
+        padding: 15px;
+    }
+}
+
+/*
+|--------------------------------------------------------------------------
+| BAJAMA SIDEBAR FIX
+|--------------------------------------------------------------------------
+| Paksa struktur sidebar:
+| BRAND
+| MENU
+| STATUS
+| LOGOUT
+|--------------------------------------------------------------------------
+*/
+
+.bajama-sidebar {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    align-items: stretch !important;
+    overflow: hidden !important;
+}
+
+.bajama-sidebar .brand-area {
+    order: 1 !important;
+    flex: 0 0 86px !important;
+}
+
+.bajama-sidebar .sidebar-menu {
+    order: 2 !important;
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+}
+
+.bajama-sidebar .sidebar-bottom {
+    order: 3 !important;
+    flex: 0 0 auto !important;
+    margin-top: auto !important;
+}
+
+/* Paksa item menu selalu normal dari atas ke bawah */
+.bajama-sidebar .sidebar-menu {
+    display: block !important;
+}
+
+.bajama-sidebar .sidebar-menu .menu-label,
+.bajama-sidebar .sidebar-menu .menu-item {
+    position: relative !important;
+    order: initial !important;
+}
+
+/* Pastikan link menu tidak terbalik */
+.bajama-sidebar .menu-item {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+}
+
+/* Icon kiri */
+.bajama-sidebar .menu-item > i {
+    flex: 0 0 20px !important;
+}
+
+/* Teks menu */
+.bajama-sidebar .menu-item > span:not(.menu-soon) {
+    flex: 0 1 auto !important;
+}
+
+/* Soon selalu di kanan */
+.bajama-sidebar .menu-item > .menu-soon {
+    margin-left: auto !important;
+}
+
+/* Status system tetap normal */
+.bajama-sidebar .network-status {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+}
+
+/* Logout tetap normal */
+.bajama-sidebar .logout-item {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+}
+
+/* Scrollbar sidebar */
+.bajama-sidebar .sidebar-menu::-webkit-scrollbar {
+    width: 5px;
+}
+
+.bajama-sidebar .sidebar-menu::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.bajama-sidebar .sidebar-menu::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,.15);
+    border-radius: 10px;
+}
+
+.bajama-sidebar .sidebar-menu::-webkit-scrollbar-thumb:hover {
+    background: rgba(255,255,255,.25);
+}
+
+/* Firefox */
+.bajama-sidebar .sidebar-menu {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,.15) transparent;
+}
+
+/* Mobile */
+@media (max-width: 991px) {
+    .bajama-sidebar {
+        display: flex !important;
+        flex-direction: column !important;
+    }
+
+    .bajama-sidebar .sidebar-menu {
+        flex: 1 1 auto !important;
+        min-height: 0 !important;
+    }
+
+    .bajama-sidebar .sidebar-bottom {
+        margin-top: auto !important;
+    }
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| BAJAMA NETWORK STANDARD LAYOUT
+|--------------------------------------------------------------------------
+| Dipakai oleh halaman yang menggunakan network_sidebar.php melalui
+| app/layout/layout.php.
+|--------------------------------------------------------------------------
+*/
+
+.main-content.network-layout-main {
+    margin-left: 260px;
+    min-height: 100vh;
+}
+
+.main-content.network-layout-main .topbar {
+    width: 100%;
+}
+
+.main-content.network-layout-main > .bajama-topbar + .content-area {
+    padding-top: 106px;
+}
+
+.main-content.network-layout-main > .bajama-topbar {
+    left: 260px !important;
+}
+
+.main-content.network-layout-main .mobile-menu-btn {
+    display: none;
+}
+
+@media (max-width: 991.98px) {
+
+    .main-content.network-layout-main {
+        margin-left: 0;
+    }
+
+    .main-content.network-layout-main > .bajama-topbar {
+        left: 0 !important;
+    }
+
+    .main-content.network-layout-main .mobile-menu-btn {
+        display: none;
+    }
+
+    .main-content.network-layout-main .content-area {
+        padding: 20px;
+        padding-top: 70px;
+    }
+
+    .main-content.network-layout-main > .bajama-topbar + .content-area {
+        padding-top: 106px;
+    }
+}
+
+@media (max-width: 575px) {
+
+    .main-content.network-layout-main .content-area {
+        padding: 15px;
+        padding-top: 68px;
+    }
+}
+
+/* ==========================================================================
+   BAJAMA RESPONSIVE TABLE SYSTEM
+   Desktop Table + Mobile Card
+   ========================================================================== */
+
+/*
+ * ================================================================
+ * BASE
+ * ================================================================
+ */
+
+.bajama-table-responsive {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    position: relative;
+}
+
+.bajama-table-responsive > table {
+    width: 100%;
+    margin-bottom: 0;
+}
+
+.bajama-table {
+    width: 100%;
+}
+
+/*
+ * Jangan biarkan tabel melebarkan layout utama.
+ */
+.main-content,
+.content-area,
+.card,
+.card-body,
+.table-responsive,
+.bajama-table-responsive {
+    min-width: 0;
+}
+
+/*
+ * ================================================================
+ * DESKTOP MODE
+ * ================================================================
+ *
+ * Desktop tetap menggunakan tampilan tabel normal.
+ */
+
+@media (min-width: 768px) {
+
+    .bajama-table-responsive {
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+    }
+
+    .bajama-table-responsive > table {
+        min-width: 100%;
+    }
+
+    .bajama-table thead {
+        display: table-header-group;
+    }
+
+    .bajama-table tbody {
+        display: table-row-group;
+    }
+
+    .bajama-table tr {
+        display: table-row;
+    }
+
+    .bajama-table th,
+    .bajama-table td {
+        display: table-cell;
+        white-space: normal;
+        vertical-align: middle;
+    }
+
+    .bajama-table-scroll-hint {
+        display: none !important;
+    }
+
+}
+
+/*
+ * ================================================================
+ * MOBILE MODE
+ * ================================================================
+ *
+ * Setiap <tr> menjadi satu card.
+ */
+
+@media (max-width: 767.98px) {
+
+    .bajama-table-responsive {
+        width: 100%;
+        max-width: 100%;
+        overflow: visible;
+    }
+
+    /*
+     * Header tabel tidak diperlukan pada mode card.
+     */
+    .bajama-table thead {
+        display: none;
+    }
+
+    /*
+     * Tabel menjadi container biasa.
+     */
+    .bajama-table,
+    .bajama-table tbody {
+        display: block;
+        width: 100%;
+    }
+
+    /*
+     * Satu baris = satu card.
+     */
+    .bajama-table tbody tr.bajama-table-row {
+        display: block;
+        width: 100%;
+        margin: 0 0 12px 0;
+        padding: 14px 15px;
+        background: #fff;
+        border: 1px solid rgba(0, 0, 0, .08);
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, .05);
+    }
+
+    /*
+     * Semua cell menjadi blok vertikal.
+     */
+    .bajama-table tbody tr.bajama-table-row > td {
+        display: block;
+        width: 100%;
+        padding: 0 0 11px 0;
+        margin: 0;
+        border: 0;
+        text-align: left !important;
+        white-space: normal;
+        vertical-align: top;
+    }
+
+    /*
+     * Label kolom.
+     */
+    .bajama-table tbody tr.bajama-table-row > td::before {
+        content: attr(data-label);
+        display: block;
+        margin-bottom: 4px;
+        font-size: 10px;
+        line-height: 1.3;
+        font-weight: 700;
+        letter-spacing: .06em;
+        text-transform: uppercase;
+        color: #6c757d;
+    }
+
+    /*
+     * Cell terakhir tidak perlu jarak bawah.
+     */
+    .bajama-table tbody tr.bajama-table-row > td:last-child {
+        padding-bottom: 0;
+    }
+
+    /*
+     * Customer name lebih menonjol.
+     */
+    .bajama-table tbody tr.bajama-table-row
+    > td[data-label="Customer"] .fw-semibold {
+        font-size: 15px;
+        line-height: 1.4;
+    }
+
+    /*
+     * Action full width pada mobile.
+     */
+    .bajama-table tbody tr.bajama-table-row
+    > td.bajama-table-actions {
+        padding-top: 4px;
+        margin-top: 3px;
+        border-top: 1px solid rgba(0, 0, 0, .07);
+    }
+
+    .bajama-table tbody tr.bajama-table-row
+    > td.bajama-table-actions::before {
+        margin-top: 7px;
+    }
+
+    .bajama-table tbody tr.bajama-table-row
+    .bajama-table-actions > div {
+        display: flex !important;
+        flex-wrap: wrap;
+        gap: 7px !important;
+        width: 100%;
+    }
+
+    .bajama-table tbody tr.bajama-table-row
+    .bajama-table-actions a,
+    .bajama-table tbody tr.bajama-table-row
+    .bajama-table-actions button {
+        min-height: 40px;
+        min-width: 40px;
+    }
+
+    /*
+     * Form action ikut fleksibel.
+     */
+    .bajama-table tbody tr.bajama-table-row
+    .bajama-table-actions form {
+        display: inline-flex !important;
+    }
+
+    /*
+     * Hilangkan efek hover tabel Bootstrap pada card.
+     */
+    .bajama-table.table-hover tbody tr.bajama-table-row:hover {
+        background: #fff;
+    }
+
+    /*
+     * Empty state tetap full width.
+     */
+    .bajama-table tbody tr:not(.bajama-table-row) {
+        display: block;
+        width: 100%;
+    }
+
+    .bajama-table tbody tr:not(.bajama-table-row) td {
+        display: block;
+        width: 100%;
+        border: 0;
+    }
+
+    /*
+     * Scroll hint tidak diperlukan pada mode mobile card.
+     */
+    .bajama-table-scroll-hint {
+        display: none !important;
+    }
+
+}
+
+/*
+ * ================================================================
+ * PAGE WIDTH PROTECTION
+ * ================================================================
+ */
+
+html,
+body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+/* TEMP TEST - BAJAMA MOBILE SIDEBAR */
+@media (max-width: 991px) {
+    .bajama-sidebar:not(.show) {
+        transform: translateX(-100%) !important;
+        visibility: hidden !important;
+    }
+
+    .bajama-sidebar.show {
+        transform: translateX(0) !important;
+        visibility: visible !important;
+    }
+}

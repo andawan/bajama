@@ -1,0 +1,39 @@
+name: Build BAJAMA Windows
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'windows-v*'
+
+permissions:
+  contents: read
+
+jobs:
+  build-installer:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install .NET 8 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Publish self-contained Windows x64
+        run: dotnet publish clients/windows/Bajama.Windows/Bajama.Windows.csproj --configuration Release --runtime win-x64 --self-contained true -p:PublishReadyToRun=true -p:PublishDir=clients/windows/publish/win-x64/
+
+      - name: Install Inno Setup
+        run: choco install innosetup --yes --no-progress
+
+      - name: Build installer
+        run: '& "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" clients/windows/installer/Bajama.iss'
+
+      - name: Upload Windows installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: bajama-windows-installer-win-x64
+          path: artifacts/BAJAMA-Setup-*-win-x64.exe
+          if-no-files-found: error
+          retention-days: 30

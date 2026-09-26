@@ -1,0 +1,5 @@
+# Windows client build output
+clients/windows/publish/
+clients/windows/**/bin/
+clients/windows/**/obj/
+artifacts/

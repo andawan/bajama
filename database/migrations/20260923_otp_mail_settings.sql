@@ -1,0 +1,19 @@
+CREATE TABLE IF NOT EXISTS app_settings (
+    setting_key VARCHAR(120) PRIMARY KEY,
+    setting_value TEXT NULL,
+    is_secret TINYINT(1) NOT NULL DEFAULT 0,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS otp_codes (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(190) NOT NULL,
+    purpose ENUM('REGISTER','PASSWORD_RESET') NOT NULL,
+    code_hash CHAR(64) NOT NULL,
+    payload JSON NULL,
+    expires_at DATETIME NOT NULL,
+    attempts TINYINT UNSIGNED NOT NULL DEFAULT 0,
+    consumed_at DATETIME NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_otp_lookup (email, purpose, expires_at)
+) ENGINE=InnoDB;
