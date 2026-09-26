@@ -31,7 +31,10 @@ jobs:
 
       - name: Publish self-contained Windows x64
         shell: pwsh
-        run: dotnet publish clients/windows/Bajama.Windows/Bajama.Windows.csproj --configuration Release --runtime win-x64 --self-contained true -p:Version=$env:APP_VERSION -p:PublishReadyToRun=true -p:PublishDir=clients/windows/publish/win-x64/
+        run: |
+          $publishDir = Join-Path $env:GITHUB_WORKSPACE "clients/windows/publish/win-x64"
+          dotnet publish clients/windows/Bajama.Windows/Bajama.Windows.csproj --configuration Release --runtime win-x64 --self-contained true "-p:Version=$env:APP_VERSION" -p:PublishReadyToRun=true "-p:PublishDir=$publishDir\"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
       - name: Install Inno Setup
         run: choco install innosetup --yes --no-progress
