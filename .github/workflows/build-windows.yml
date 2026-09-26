@@ -41,8 +41,20 @@ jobs:
         run: |
           $iscc = "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe"
           if (-not (Test-Path $iscc)) { throw "Inno Setup compiler not found: $iscc" }
-          & $iscc "/DAppVersion=$env:APP_VERSION" "/O$env:GITHUB_WORKSPACE\artifacts" "clients/windows/installer/Bajama.iss"
-          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $publishExe = Join-Path $env:GITHUB_WORKSPACE "clients/windows/publish/win-x64/Bajama.Windows.exe"
+          if (-not (Test-Path $publishExe)) { throw "Published BAJAMA executable not found: $publishExe" }
+          Write-Host "Compiling installer for version $env:APP_VERSION"
+          Write-Host "Published app: $publishExe"
+          Write-Host "Installer output: $env:GITHUB_WORKSPACE\artifacts"
+          Push-Location (Join-Path $env:GITHUB_WORKSPACE "clients/windows/installer")
+          $compilerExitCode = 0
+          try {
+            & $iscc "/DAppVersion=$env:APP_VERSION" "/O$env:GITHUB_WORKSPACE\artifacts" "Bajama.iss"
+            $compilerExitCode = $LASTEXITCODE
+          } finally {
+            Pop-Location
+          }
+          if ($compilerExitCode -ne 0) { throw "Inno Setup compiler exited with code $compilerExitCode" }
 
       - name: Upload Windows installer
         uses: actions/upload-artifact@v4
