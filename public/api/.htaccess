@@ -1,6 +1,11 @@
 Options -Indexes
 RewriteEngine On
 
+# Preserve Authorization for PHP-FPM/FastCGI. Apache does not expose this
+# header to PHP by default on some proxy_fcgi configurations.
+RewriteCond %{HTTP:Authorization} .
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
 # Route only versioned API paths through the JSON front controller.
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
