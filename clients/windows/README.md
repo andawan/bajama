@@ -40,7 +40,8 @@ Pasang .NET 8 SDK dan Inno Setup 6, lalu dari root repository jalankan:
 
 ```powershell
 dotnet publish clients/windows/Bajama.Windows/Bajama.Windows.csproj --configuration Release --runtime win-x64 --self-contained true -p:PublishReadyToRun=true -p:PublishDir=clients/windows/publish/win-x64/
-& "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" clients/windows/installer/Bajama.iss
+New-Item -ItemType Directory -Force artifacts | Out-Null
+& "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" /DAppVersion=1.0.0 "/O$PWD\artifacts" clients/windows/installer/Bajama.iss
 ```
 
 Installer akan dibuat di `artifacts/`.

@@ -21,14 +21,28 @@ jobs:
         with:
           dotnet-version: 8.0.x
 
+      - name: Prepare release version and output folder
+        shell: pwsh
+        run: |
+          $version = $env:GITHUB_REF_NAME -replace '^windows-v', ''
+          if ($version -notmatch '^\d+\.\d+\.\d+$') { throw "Unexpected release tag: $env:GITHUB_REF_NAME" }
+          "APP_VERSION=$version" >> $env:GITHUB_ENV
+          New-Item -ItemType Directory -Force "$env:GITHUB_WORKSPACE\artifacts" | Out-Null
+
       - name: Publish self-contained Windows x64
-        run: dotnet publish clients/windows/Bajama.Windows/Bajama.Windows.csproj --configuration Release --runtime win-x64 --self-contained true -p:PublishReadyToRun=true -p:PublishDir=clients/windows/publish/win-x64/
+        shell: pwsh
+        run: dotnet publish clients/windows/Bajama.Windows/Bajama.Windows.csproj --configuration Release --runtime win-x64 --self-contained true -p:Version=$env:APP_VERSION -p:PublishReadyToRun=true -p:PublishDir=clients/windows/publish/win-x64/
 
       - name: Install Inno Setup
         run: choco install innosetup --yes --no-progress
 
       - name: Build installer
-        run: '& "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" clients/windows/installer/Bajama.iss'
+        shell: pwsh
+        run: |
+          $iscc = "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe"
+          if (-not (Test-Path $iscc)) { throw "Inno Setup compiler not found: $iscc" }
+          & $iscc "/DAppVersion=$env:APP_VERSION" "/O$env:GITHUB_WORKSPACE\artifacts" "clients/windows/installer/Bajama.iss"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
       - name: Upload Windows installer
         uses: actions/upload-artifact@v4

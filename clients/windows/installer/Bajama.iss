@@ -1,5 +1,7 @@
 #define AppName "BAJAMA"
+#ifndef AppVersion
 #define AppVersion "1.0.0"
+#endif
 #define AppPublisher "BAJAMA"
 #define AppExeName "Bajama.Windows.exe"
 
@@ -10,7 +12,6 @@ AppVersion={#AppVersion}
 AppPublisher={#AppPublisher}
 DefaultDirName={localappdata}\Programs\BAJAMA
 DefaultGroupName=BAJAMA
-OutputDir=..\..\..\artifacts
 OutputBaseFilename=BAJAMA-Setup-{#AppVersion}-win-x64
 Compression=lzma2
 SolidCompression=yes
@@ -20,10 +21,6 @@ ArchitecturesAllowed=x64
 PrivilegesRequired=lowest
 UninstallDisplayIcon={app}\{#AppExeName}
 SetupLogging=yes
-
-[Languages]
-Name: "indonesian"; MessagesFile: "compiler:Languages\Indonesian.isl"
-Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Tasks]
 Name: "desktopicon"; Description: "Buat shortcut di Desktop"; GroupDescription: "Shortcut tambahan:"; Flags: unchecked
